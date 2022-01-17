@@ -7,13 +7,13 @@ import ListSubheader from '@mui/material/ListSubheader';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import axios from 'axios';
-import { useHistory,useParams,useRouteMatch,Switch,Route } from 'react-router-dom';
+import { useHistory,useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 
 export default  function Album() {
   const param = useParams();
   const history = useHistory()
-  let { path, url } = useRouteMatch();
+  
     const [album_data,setAlbumData] = React.useState([]);
     const [page,setPage] = React.useState(1);
     const [artistData,setArtistData] = React.useState([]);
@@ -141,11 +141,25 @@ export default  function Album() {
     }
 
     const getSorteddata = async()=>{
-      // const {data} = await axios.get(`https://ancient-atoll-47915.herokuapp.com/album/sort_year?page=${page}&size=4`);
-      // console.log(data)
-      let s = album_data;
-      s = album_data.sort((a,b)=>{return a.Year-b.Year});
-      setAlbumData(s)
+      try{
+        const {data} = await axios.get(`https://ancient-atoll-47915.herokuapp.com/album?page=${page}&size=4`);
+        console.log(data)
+          let sortedData = data;
+          sortedData.album.sort((a,b)=>{return a.year-b.year});
+          console.log(sortedData)
+         setAlbumData(sortedData);
+         let x = [];
+         for(let i=1;i<=data?.total_pages;i++)
+         x.push(i)
+ 
+         setTotalPages(x)
+      }catch(err){
+        setError(true);
+        console.log(err)
+      }finally{
+        setLoading(false);
+      }
+      
     }
 
   
@@ -154,7 +168,7 @@ export default  function Album() {
       else if(param.name) getFilteredData (param.name)
         getData();
         getName();
-        console.log(path,url,'Params')
+       // console.log(path,url,'Params')
     },[page,loading,error])
   return (
     <>
@@ -174,13 +188,16 @@ export default  function Album() {
 
       <TextField onChange={(e)=>{setFiltredName(e.target.value)}} label={'Name'} id="margin-none" sx={{ fontSize: 25,textAlign:"center",margin:"4% 5%" }} />
       <Button onClick={()=>{
-       // history.push(`/name/${filteredName}`)
+        history.push(`/name/${filteredName}`)
        //setQueryParam
         getFilteredData(filteredName);
         }}>Filter By Name</Button>
 
       <TextField onChange={(e)=>{setFiltredGenre(e.target.value)}} label={'Genre'} id="margin-none" sx={{ fontSize: 25,textAlign:"center",margin:"4% 5%" }} />
-      <Button onClick={()=>getFilteredGenre(filtredGenre)}>Filter By Genre</Button>
+      <Button onClick={()=>{
+         history.push(`/genre/${filtredGenre}`)
+        getFilteredGenre(filtredGenre);
+        }}>Filter By Genre</Button>
 
       </ListSubheader>
       </ImageListItem>
@@ -230,19 +247,12 @@ export default  function Album() {
           </Button>
       })}
       <Button onClick={()=>{
+       // setQueryParam('page',page+1)
           setPage(page+1)
       }} color="secondary" disabled={page===album_data.total_pages}>Next</Button>
       </>
     }
-    <>
-    <Switch>
-    <Route exact path={path}>
-    <Album />
-        </Route>
-        <Route path={`${path}/localhost:3000/name/:name`}>
-          <Album />
-        </Route>
-      </Switch></>
+  
     </>  
     
   );

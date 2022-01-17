@@ -47,15 +47,21 @@ export const Edit=()=>{
         <>
             <Card>
                 {data?.album?.map((el)=>{
-                  return  <Card sx={{display:'flex',justifyContent:'space-evenly'}} key={el._id}>
-                        <Card>
-                            <img src={el.cover_photo} alt={el._id}/><br/>
+                  return  <Card sx={{justifyContent:'space-evenly',margin:'2%'}} key={el._id}>
+                        <Card sx={{display:'flex',justifyContent:'space-evenly',fontSize:'20px',padding:'10px'}}>
+                            <img src={el.logo_artist} alt={el._id}/><br/>
+                            Artist Name : {el.artist_name}<br/>
                             Genre  :{el.genre}<br/>
-                            Year : {el.year}
+                            Year : {el.year}<br/>
+                            No. Of Songs : {el?.songs?.length}
                         </Card>
+                        <br/>
                         <Card>
-                            {el?.songs?.map(e=>{
+                            {el?.songs?.map((e,i)=>{
                                 return <Card sx={{display:'flex',justifyContent:'space-evenly',margin:"3% 3%"}} key={e._id}>
+                                        <Typography>
+                                            {i+1}
+                                        </Typography>
                                         <Typography>
                                             {e.name}
                                         </Typography>
