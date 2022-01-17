@@ -22,6 +22,7 @@ export default  function Album() {
   const [totalPages,setTotalPages] = React.useState([]);
   const [loading,setLoading] = React.useState(true);
   const [ error,setError] = React.useState(false);
+  const [sortOn, setSortOn] = React.useState(false);
     const getArtistId = async(name)=>{
      // setLoading(true);
       try{
@@ -182,7 +183,8 @@ export default  function Album() {
 
         <Button color="secondary" variant="text" onClick={()=>{
           //console.log("sorted");
-          getSorteddata();
+          // getSorteddata();
+          setSortOn(true)
       }} >Sort By Year </Button>
 
 
@@ -201,7 +203,7 @@ export default  function Album() {
 
       </ListSubheader>
       </ImageListItem>
-      {album_data?.album?.map((item,i) => (
+      {album_data?.album?.sort((a,b)=>  sortOn&&  a.year - b.year).map((item,i) => (
         
         <ImageListItem key={item._id} sx={{cursor:'pointer'}} onClick={()=>{
           
@@ -221,7 +223,8 @@ export default  function Album() {
           
           <ImageListItemBar
             title={item.artist_name}
-            subtitle={`songs : ${item.songs.length}`}
+            subtitle={`songs : ${item.songs.length} ----- Release Year : ${item.year}`}
+            
             actionIcon={
               <IconButton
                 sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
@@ -230,6 +233,7 @@ export default  function Album() {
                 <InfoIcon />
               </IconButton>
             }
+
           />
         </ImageListItem>
       ))}
