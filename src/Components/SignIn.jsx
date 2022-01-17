@@ -4,7 +4,7 @@ import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
-import Avatar from '@mui/material/Avatar';
+
 
 export const SignIn =()=>{
     const [name,setname] = useState("");

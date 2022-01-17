@@ -36,7 +36,7 @@ export const Header = ()=>{
            value="one" label="Album" />
           <Tab onClick={()=>{
               history.push('/EditPage')
-          }} sx={{margin:"0% 3%"}}  value="two" label="Edit Album" />
+          }} sx={{margin:"0% 1.5%"}}  value="two" label="Edit Album" />
           
         </Tabs>
         

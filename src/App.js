@@ -18,10 +18,16 @@ function App() {
        
         <div>
           <Switch>
-              <Route exact path='/'>
+              <Route exact path={`/`}>
                  <Album />
               </Route>
-              <Route exact path='/albumDetails'>
+              <Route  path={`/genre/:genre`}>
+                 <Album />
+              </Route>
+              <Route  path={`/name/:name`}>
+                 <Album />
+              </Route>
+              <Route exact path={`/albumDetails/:id`}>
                   <AlbumSongs />
               </Route>
               <Route exact path='/signIn'>
