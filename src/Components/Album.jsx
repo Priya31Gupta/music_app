@@ -9,11 +9,12 @@ import InfoIcon from '@mui/icons-material/Info';
 import axios from 'axios';
 import { useHistory,useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
+import useQuery from './query';
 
 export default  function Album() {
   const param = useParams();
   const history = useHistory()
-  
+  let query = useQuery();
     const [album_data,setAlbumData] = React.useState([]);
     const [page,setPage] = React.useState(1);
     const [artistData,setArtistData] = React.useState([]);
@@ -80,6 +81,7 @@ export default  function Album() {
       try{
         const {data} = await axios.get(`https://ancient-atoll-47915.herokuapp.com/album/filterByGenre/${genre}`);
         console.log(data);
+        setFiltredGenre('')
         if(!data) {
           alert('No Data Found')
         }else{
@@ -141,36 +143,34 @@ export default  function Album() {
        
     }
 
-    const getSorteddata = async()=>{
-      try{
-        const {data} = await axios.get(`https://ancient-atoll-47915.herokuapp.com/album?page=${page}&size=4`);
-        console.log(data)
-          let sortedData = data;
-          sortedData.album.sort((a,b)=>{return a.year-b.year});
-          console.log(sortedData)
-         setAlbumData(sortedData);
-         let x = [];
-         for(let i=1;i<=data?.total_pages;i++)
-         x.push(i)
- 
-         setTotalPages(x)
-      }catch(err){
-        setError(true);
-        console.log(err)
-      }finally{
-        setLoading(false);
+  const sortedStyle={
+    backgroundColor:"blue",
+    color:'white'
+  }
+  const sortData =(status)=>{
+      if(status==='true'){
+          setSortOn(true);
+      }else{
+        setSortOn(false);
       }
-      
-    }
-
+  }
+  const handlePage =()=>{
+    if(query.get('page')) {
+      console.log(query.get('page'));
+      let page = Number(query.get('page'))
+      setPage(page)}
+  }
   
     React.useEffect(()=>{
       if(param.genre) getFilteredGenre(param.genre)
-      else if(param.name) getFilteredData (param.name)
+       if(param.name) getFilteredData (param.name)
+       if (param.status) sortData(param.status)
+       handlePage();
+       
         getData();
         getName();
-       // console.log(path,url,'Params')
-    },[page,loading,error])
+       // console.log(path,url,'Params');
+    },[page,loading,error,param])
   return (
     <>
       {loading?<> <ListSubheader component="div" sx={{display:'flex'}}>Loading ...</ListSubheader></>:error?<> <ListSubheader component="div" sx={{display:'flex'}}>Something Went Wrong!</ListSubheader></>:<> 
@@ -180,22 +180,22 @@ export default  function Album() {
 
       <ImageListItem key="Subheader" cols={2}>
         <ListSubheader component="div" sx={{display:'flex'}}> 
+            <Button color="secondary" sx={sortOn?sortedStyle:""}  variant="text" onClick={()=>{
+          history.push(`/sort/${!sortOn}`)
+          
+      }} >Sort By Year (old to new)</Button>
 
-        <Button color="secondary" variant="text" onClick={()=>{
-          //console.log("sorted");
-          // getSorteddata();
-          setSortOn(true)
-      }} >Sort By Year </Button>
+        
 
-
-      <TextField onChange={(e)=>{setFiltredName(e.target.value)}} label={'Name'} id="margin-none" sx={{ fontSize: 25,textAlign:"center",margin:"4% 5%" }} />
+      <TextField value={filteredName} onChange={(e)=>{setFiltredName(e.target.value)}} label={'Name'} id="margin-none" sx={{ fontSize: 25,textAlign:"center",margin:"4% 5%" }} />
+      
       <Button onClick={()=>{
         history.push(`/name/${filteredName}`)
        //setQueryParam
         getFilteredData(filteredName);
         }}>Filter By Name</Button>
 
-      <TextField onChange={(e)=>{setFiltredGenre(e.target.value)}} label={'Genre'} id="margin-none" sx={{ fontSize: 25,textAlign:"center",margin:"4% 5%" }} />
+      <TextField value={filtredGenre} onChange={(e)=>{setFiltredGenre(e.target.value)}} label={'Genre'} id="margin-none" sx={{ fontSize: 25,textAlign:"center",margin:"4% 5%" }} />
       <Button onClick={()=>{
          history.push(`/genre/${filtredGenre}`)
         getFilteredGenre(filtredGenre);
@@ -241,18 +241,22 @@ export default  function Album() {
       
     </ImageList>
     <Button color="secondary" onClick={()=>{
-          setPage(page-1)
+          setPage(page-1);
+          history.push(`/?page=${page}`)
       }} disabled={page===1}>Previous</Button>
       {totalPages?.map((e,i)=>{
         return  <Button key={i} onClick={()=>{
-            setPage(e)
+          history.push(`/?page=${e}`);
+          setPage(e);
           }}>
             {e}
           </Button>
       })}
       <Button onClick={()=>{
        // setQueryParam('page',page+1)
-          setPage(page+1)
+          
+          history.push(`/?page=${page+1}`);
+          setPage(page+1);
       }} color="secondary" disabled={page===album_data.total_pages}>Next</Button>
       </>
     }

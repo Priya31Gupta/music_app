@@ -27,6 +27,12 @@ function App() {
               <Route  path={`/name/:name`}>
                  <Album />
               </Route>
+              <Route  path={`/sort/:status`}>
+                 <Album />
+              </Route>
+              <Route  path={`?page=`}>
+                 <Album />
+              </Route>
               <Route exact path={`/albumDetails/:id`}>
                   <AlbumSongs />
               </Route>
@@ -39,6 +45,9 @@ function App() {
               <Route exact path='/EditPage'>
                   <Edit />
               </Route>
+              <Route>
+                <h1>404 Page not found</h1>
+            </Route>
           </Switch>
         </div>
     </div>
