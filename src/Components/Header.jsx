@@ -2,22 +2,39 @@ import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useHistory } from 'react-router-dom/';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 
 
 
 export const Header = ()=>{
     const history=useHistory()
     const [value, setValue] = useState('one');
+    const [userName, setUserName] = useState('')
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
+
+    useEffect(() => {
+      const handleStorage = () => {
+        if(JSON.parse(localStorage.getItem('SignedIn'))) {
+          let user = JSON.parse(localStorage.getItem('SignedIn')).user.name[0];
+          //console.log(user,"user")
+          setUserName(user);
+        }else{
+          setUserName('');
+        }
+      }
+    
+      window.addEventListener('storage', handleStorage())
+      return () => window.removeEventListener('storage', handleStorage())
+    }, [])
  
     return (
       <Box sx={{ width: '100%',backgroundColor:"#FFD39A",justifyContent:"space-between",display:'flex' }}>
@@ -44,7 +61,7 @@ export const Header = ()=>{
       {(popupState) => (
         <React.Fragment>
              <Avatar {...bindTrigger(popupState)} >
-                 {localStorage.getItem('SignedIn')&&`${localStorage.getItem('SignedIn')?.user?.name[0]}`}
+                 {userName ? userName : <PermIdentityIcon />}
              </Avatar>
             <Menu {...bindMenu(popupState)}>
 

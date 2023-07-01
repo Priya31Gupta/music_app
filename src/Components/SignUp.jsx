@@ -22,7 +22,7 @@ export const SignUp =()=>{
                     email : email,
                     password:password
                  }
-                fetch("https://ancient-atoll-47915.herokuapp.com/signup",{
+                fetch("https://music-backend-k9aq.onrender.com/signup",{
                     method: "POST",
                    body: JSON.stringify(b),
                     headers: {

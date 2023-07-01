@@ -27,7 +27,7 @@ export default  function Album() {
     const getArtistId = async(name)=>{
      // setLoading(true);
       try{
-        const {data} = await axios.get(`https://ancient-atoll-47915.herokuapp.com/artists/filteredByName/${name}`);
+        const {data} = await axios.get(`https://music-backend-k9aq.onrender.com/artists/filteredByName/${name}`);
         console.log(data.artist_[0]._id)
         return data.artist_[0]._id
       }catch(err){
@@ -44,7 +44,7 @@ export default  function Album() {
         try{
           const id = await   getArtistId(name);
           console.log(id);
-          const {data} = await axios.get(`https://ancient-atoll-47915.herokuapp.com/album/filterByName/${id}`);
+          const {data} = await axios.get(`https://music-backend-k9aq.onrender.com/album/filterByName/${id}`);
           console.log(data,22);
          ;
           if(!data) {
@@ -79,7 +79,7 @@ export default  function Album() {
      // setLoading(true);
      
       try{
-        const {data} = await axios.get(`https://ancient-atoll-47915.herokuapp.com/album/filterByGenre/${genre}`);
+        const {data} = await axios.get(`https://music-backend-k9aq.onrender.com/album/filterByGenre/${genre}`);
         console.log(data);
         setFiltredGenre('')
         if(!data) {
@@ -105,7 +105,7 @@ export default  function Album() {
     const getName = async (id)=>{
       //setLoading(true);
         try{
-          const {data}= await axios.get(`https://ancient-atoll-47915.herokuapp.com/artists?page=${page}&size=4`);
+          const {data}= await axios.get(`https://music-backend-k9aq.onrender.com/artists?page=${page}&size=4`);
           // console.log(data,data.artist_)
            setArtistData(data.artist_);
            let x = [];
@@ -126,7 +126,7 @@ export default  function Album() {
     const getData =async ()=>{
       //setLoading(true);
       try{
-        const {data} = await axios.get(`https://ancient-atoll-47915.herokuapp.com/album?page=${page}&size=4`);
+        const {data} = await axios.get(`https://music-backend-k9aq.onrender.com/album?page=${page}&size=4`);
         //console.log(data);
          setAlbumData(data);
          let x = [];

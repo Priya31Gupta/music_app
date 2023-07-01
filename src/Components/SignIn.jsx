@@ -4,12 +4,14 @@ import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 
 export const SignIn =()=>{
     const [name,setname] = useState("");
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState('');
+    const history = useHistory();
     const handleSignin = async ()=>{
         try{
             if(email===""||password===''||name===''){
@@ -20,7 +22,7 @@ export const SignIn =()=>{
                     email : email,
                     password:password
                  }
-                fetch("https://ancient-atoll-47915.herokuapp.com/signin",{
+                fetch("https://music-backend-k9aq.onrender.com/signin",{
                     method: "POST",
                    body: JSON.stringify(b),
                     headers: {
@@ -33,7 +35,10 @@ export const SignIn =()=>{
                 .then(json => {console.log(json);
                     if(json.token){
                     alert(`Successfully signed In`);
-                    localStorage.setItem("SignedIn",JSON.stringify(json));}})                         
+                    localStorage.setItem("SignedIn",JSON.stringify(json));
+                    history.push("/")    ;
+                    }
+                })  
                 .catch((err)=>{
                     alert(`Ooops! Something Went Wrong!😑
                        `)

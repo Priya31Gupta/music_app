@@ -1,4 +1,4 @@
-//https://ancient-atoll-47915.herokuapp.com/artists
+//https://music-backend-k9aq.onrender.com/artists
 
 import { Route,Switch } from 'react-router-dom';
 import './App.css';
